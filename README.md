@@ -21,17 +21,18 @@ AnnData integrates AI-powered crop disease detection, smart irrigation guidance,
 - **Farmer–Buyer Marketplace:** Explore buyer demand, compare offered prices, list crops, and estimate net earnings.
 - **AI Chatbot:** Provide farmers with an accessible conversational interface for agricultural queries and platform assistance.
 - **Weather Forecast:** Access weather information to support farming and irrigation planning.
-- **Bilingual Interface:** Switch between Hindi and English for improved accessibility.
+- **Multilingual Interface:** Switch between English and other regional languages for improved accessibility.
 - **User Profiles & Role Selection:** Support farmer and buyer experiences through a unified interface.
 
 ## Technology Stack
 
 - **Frontend:** React, TypeScript, Vite, CSS
-- **Backend:** [Add your backend framework]
+- **Backend:** FastAPI, Python
 - **Machine Learning:** Integrated crop disease detection model
-- **Database:** [Add your database]
+- **Database:** Postgres, Neon
 - **AI Chatbot:** Integrated conversational assistant
-- **Integrations:** [Add weather, market-price, or other APIs used]
+- **Machine Learning:** Tensorflow, CNN, Scikit Learn
+- **Integrations:** Whether API, govt schemes Data
 
 ## Getting Started
 
