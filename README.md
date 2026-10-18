@@ -54,7 +54,7 @@ Start the backend separately using the setup instructions in its directory. Conf
 
 ## Demo Video
 
-**Project Demonstration:** [Watch AnnData Demo](YOUR_DEMO_VIDEO_LINK)
+**Project Demonstration:** https://drive.google.com/file/d/1Eug29S9tkJw6y1imPPg-iOAeWZkaLMl7/view?usp=sharing
 
 The demo showcases the platform's major features, ML-powered disease detection, chatbot, and farmer-focused user experience.
 
