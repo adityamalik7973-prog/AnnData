@@ -1,27 +1,62 @@
-# AnnData
+# अन्नData (AnnData) — Smart Farming, Stronger Futures
 
-AnnData is an intelligent agricultural platform empowering farmers with integrated digital tools:
-- **CropClock:** Harvest listings, buyer offer comparison, and net-earnings maximization.
-- **FairQueue:** Transparent machinery rental and conflict-free booking scheduling.
-- **WaterWindow:** Precision irrigation advisories tailored to crop stage, soil texture, and weather.
-- **FarmConnect Camps:** Rural digital literacy and awareness camp scheduling and discovery.
-- **SchemeSaathi:** Government scheme discovery and privacy-first eligibility matching.
+**AnnData** is an AI-powered smart farming platform built to empower farmers with accessible technology, improve crop productivity, reduce farming costs, and connect them with better agricultural opportunities.
 
-For backend setup, architecture, and API documentation, see [backend/README.md](backend/README.md).
-For frontend setup, architecture, and usage guide, see [frontend/README.md](frontend/README.md).
+## Problem Statement
 
-## Quickstart
+**Empowering Farmers Through Technology:** Create solutions that help farmers improve crop productivity, detect plant diseases, access market prices, optimise irrigation, and connect directly with buyers.
 
-### 1. Start Backend:
+Farmers often face challenges such as crop diseases, expensive machinery, inefficient irrigation, limited awareness of government schemes, and difficulty finding buyers offering competitive prices. AnnData addresses these challenges through a unified, farmer-friendly digital platform.
+
+## Proposed Solution
+
+AnnData integrates AI-powered crop disease detection, smart irrigation guidance, machinery rentals, government scheme discovery, and a farmer–buyer marketplace into one platform. With **Hindi and English support**, an intuitive interface, and an integrated chatbot, it helps farmers access information and make informed decisions more easily.
+
+## Core Features
+
+- **AI-Based Crop Disease Detection:** Analyse crop images using an integrated ML model to identify potential diseases and provide treatment guidance.
+- **Smart Irrigation:** Guide farmers on irrigation decisions using crop requirements, soil conditions, and weather information.
+- **Agricultural Machinery Rental:** Discover equipment, compare hourly or daily rental rates, and book machinery.
+- **Government Schemes & Farmer Camps:** Discover relevant support schemes, subsidies, and agricultural awareness programmes.
+- **Farmer–Buyer Marketplace:** Explore buyer demand, compare offered prices, list crops, and estimate net earnings.
+- **AI Chatbot:** Provide farmers with an accessible conversational interface for agricultural queries and platform assistance.
+- **Weather Forecast:** Access weather information to support farming and irrigation planning.
+- **Bilingual Interface:** Switch between Hindi and English for improved accessibility.
+- **User Profiles & Role Selection:** Support farmer and buyer experiences through a unified interface.
+
+## Technology Stack
+
+- **Frontend:** React, TypeScript, Vite, CSS
+- **Backend:** [Add your backend framework]
+- **Machine Learning:** Integrated crop disease detection model
+- **Database:** [Add your database]
+- **AI Chatbot:** Integrated conversational assistant
+- **Integrations:** [Add weather, market-price, or other APIs used]
+
+## Getting Started
+
+Clone the repository:
+
 ```bash
-cd backend
-.\.venv\Scripts\activate
-uvicorn app.main:app --reload --port 8000
+git clone <your-repository-url>
+cd <your-project-directory>
 ```
 
-### 2. Start Frontend:
+Install and start the frontend:
+
 ```bash
-cd frontend
+npm install
 npm run dev
 ```
-Open **http://localhost:5173** to view the app.
+
+Start the backend separately using the setup instructions in its directory. Configure the required environment variables and API endpoints before running the complete application.
+
+## Demo Video
+
+**Project Demonstration:** [Watch AnnData Demo](YOUR_DEMO_VIDEO_LINK)
+
+The demo showcases the platform's major features, ML-powered disease detection, chatbot, and farmer-focused user experience.
+
+## Vision
+
+Our vision is to make farming smarter, more accessible, and more sustainable by bringing AI, agricultural information, and market opportunities directly to farmers.
