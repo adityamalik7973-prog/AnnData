@@ -3,10 +3,12 @@ from datetime import date, datetime, timezone
 from decimal import Decimal
 
 from fastapi.testclient import TestClient
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from app.main import app
-from app.database import SessionLocal
+from app.database import Base, get_db
 from app.models.user import User
 from app.models.farm import Farm
 from app.models.harvest import Harvest, BuyerOffer
@@ -58,10 +60,31 @@ class CropClockIntegrationTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.client = TestClient(app)
-        cls.db = SessionLocal()
+        cls.test_engine = create_engine(
+            "sqlite:///:memory:",
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,
+        )
+        cls.TestingSessionLocal = sessionmaker(
+            bind=cls.test_engine,
+            autocommit=False,
+            autoflush=False,
+            expire_on_commit=False,
+        )
+        Base.metadata.create_all(bind=cls.test_engine)
 
-        # Generate unique phone/emails to avoid collisions in Neon
+        def override_get_db():
+            db = cls.TestingSessionLocal()
+            try:
+                yield db
+            finally:
+                db.close()
+
+        app.dependency_overrides[get_db] = override_get_db
+        cls.client = TestClient(app)
+        cls.db = cls.TestingSessionLocal()
+
+        # Generate unique phone/emails to avoid collisions
         unique_suffix = int(datetime.now(timezone.utc).timestamp())
         cls.farmer = User(
             name=f"Test Farmer {unique_suffix}",
@@ -124,6 +147,7 @@ class CropClockIntegrationTests(unittest.TestCase):
         except Exception:
             cls.db.rollback()
         finally:
+            app.dependency_overrides.clear()
             cls.db.close()
 
     def test_01_create_harvest_success(self):
@@ -252,6 +276,56 @@ class CropClockIntegrationTests(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json()["status"], "ok")
         self.assertEqual(res.json()["database"]["status"], "connected")
+
+    def test_10_farmer_can_submit_buyer_offer(self):
+        # Create a second available harvest
+        payload_h = {
+            "farm_id": self.farm.id,
+            "farmer_id": self.farmer.id,
+            "crop": "Golden Maize",
+            "quantity_kg": 1500.00,
+            "expected_harvest_date": str(date.today()),
+        }
+        res_h = self.client.post("/api/harvests", json=payload_h)
+        self.assertEqual(res_h.status_code, 201)
+        h_id = res_h.json()["id"]
+        self.created_harvest_ids.append(h_id)
+
+        # Farmer user submits an offer as buyer
+        payload_offer = {
+            "buyer_id": self.other_farmer.id,
+            "price_per_kg": 28.00,
+            "transport_cost": 400.00,
+            "other_costs": 100.00,
+        }
+        res_offer = self.client.post(f"/api/harvests/{h_id}/offers", json=payload_offer)
+        self.assertEqual(res_offer.status_code, 201)
+        self.assertEqual(res_offer.json()["buyer_id"], self.other_farmer.id)
+
+    def test_11_farmer_cannot_bid_on_own_harvest(self):
+        # Create a harvest belonging to self.farmer
+        payload_h = {
+            "farm_id": self.farm.id,
+            "farmer_id": self.farmer.id,
+            "crop": "Organic Mustard",
+            "quantity_kg": 800.00,
+            "expected_harvest_date": str(date.today()),
+        }
+        res_h = self.client.post("/api/harvests", json=payload_h)
+        self.assertEqual(res_h.status_code, 201)
+        h_id = res_h.json()["id"]
+        self.created_harvest_ids.append(h_id)
+
+        # Attempting to submit offer on own harvest must be rejected with 400 Bad Request
+        payload_self_bid = {
+            "buyer_id": self.farmer.id,
+            "price_per_kg": 50.00,
+            "transport_cost": 0.00,
+            "other_costs": 0.00,
+        }
+        res_self_bid = self.client.post(f"/api/harvests/{h_id}/offers", json=payload_self_bid)
+        self.assertEqual(res_self_bid.status_code, 400)
+        self.assertIn("cannot submit a purchase offer on their own crop listing", res_self_bid.json()["detail"])
 
 
 class CropClockOpenAPITests(unittest.TestCase):
